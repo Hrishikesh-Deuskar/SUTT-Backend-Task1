@@ -1,0 +1,38 @@
+
+[
+  {
+    "cab_id": 1,
+    "driver": "Ramesh",
+    "capacity": 4,
+    "destination": "Delhi",
+    "time_slot": "Morning"
+  },
+  {
+    "cab_id": 2,
+    "driver": "Suresh",
+    "capacity": 3,
+    "destination": "Delhi",
+    "time_slot": "Morning"
+  },
+  {
+    "cab_id": 3,
+    "driver": "Mahesh",
+    "capacity": 4,
+    "destination": "Jaipur",
+    "time_slot": "Evening"
+  },
+  {
+    "cab_id": 4,
+    "driver": "Rajesh",
+    "capacity": 2,
+    "destination": "Delhi",
+    "time_slot": "Night"
+  },
+  {
+    "cab_id": 5,
+    "driver": "Dinesh",
+    "capacity": 4,
+    "destination": "Jaipur",
+    "time_slot": "Morning"
+  }
+]

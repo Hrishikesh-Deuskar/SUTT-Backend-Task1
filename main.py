@@ -167,3 +167,136 @@ def view_status(cabs):
             print("  Passenger:", student.name, "| Year:", student.year)
 
 
+def find_matches(cabs):
+    print("\n--- Possible Cab Matches ---")
+
+    temp_queues = {}
+
+    for trip in queues:
+        temp_queues[trip] = queues[trip].copy()
+
+    open_cabs = 0
+
+    for cab in cabs:
+        if cab.departed:
+            continue
+
+        open_cabs += 1
+
+        print("\nCab:", cab.cab_id, "| Driver:", cab.driver)
+        print("Trip:", cab.destination, "-", cab.time_slot)
+
+        trip = (cab.destination, cab.time_slot)
+
+        if trip not in temp_queues:
+            print("No students waiting for this trip.")
+            continue
+
+        temp_queue = temp_queues[trip]
+        seats = cab.capacity - len(cab.passengers)
+
+        count = 0
+
+        while count < seats and len(temp_queue) > 0:
+            entry = heapq.heappop(temp_queue)
+            student = entry[2]
+
+            print("  ", student.name, "| Year:", student.year)
+
+            count += 1
+
+        if count == 0:
+            print("No students available.")
+
+        print("Potential passengers:", count, "/", cab.capacity)
+
+    if open_cabs == 0:
+        print("No open cabs available.")
+
+    print("\nThis was only a preview. No seats were assigned.")
+
+
+def dispatch_cab(cabs):
+    print("\n--- Dispatch Cab ---")
+
+    destination = input(
+        "Destination (Delhi/Jaipur): "
+    ).strip().title()
+
+    if destination not in ["Delhi", "Jaipur"]:
+        print("Invalid destination.")
+        return
+
+    time_slot = input(
+        "Time slot (Morning/Afternoon/Evening/Night): "
+    ).strip().title()
+
+    if time_slot not in ["Morning", "Afternoon", "Evening", "Night"]:
+        print("Invalid time slot.")
+        return
+
+    trip = (destination, time_slot)
+
+    available_cabs = []
+
+    for cab in cabs:
+        if cab.destination == destination and cab.time_slot == time_slot:
+            if not cab.departed:
+                available_cabs.append(cab)
+
+    if len(available_cabs) == 0:
+        print("No open cab available for this trip.")
+        return
+
+    if trip not in queues or len(queues[trip]) == 0:
+        print("No students waiting for this trip.")
+        return
+
+    print("\nAvailable cabs:")
+
+    for cab in available_cabs:
+        print(
+            "Cab:", cab.cab_id,
+            "| Driver:", cab.driver,
+            "| Capacity:", cab.capacity
+        )
+
+    try:
+        cab_id = int(input("Enter cab ID to dispatch: "))
+    except ValueError:
+        print("Please enter a valid cab ID.")
+        return
+
+    selected_cab = None
+
+    for cab in available_cabs:
+        if cab.cab_id == cab_id:
+            selected_cab = cab
+            break
+
+    if selected_cab is None:
+        print("Invalid cab ID or cab already departed.")
+        return
+
+    seats = selected_cab.capacity - len(selected_cab.passengers)
+
+    count = 0
+
+    while count < seats and len(queues[trip]) > 0:
+        entry = heapq.heappop(queues[trip])
+        student = entry[2]
+
+        selected_cab.passengers.append(student)
+
+        count += 1
+
+    selected_cab.departed = True
+
+    print("\nCab dispatched successfully!")
+    print("Cab:", selected_cab.cab_id)
+    print("Driver:", selected_cab.driver)
+    print("Passengers:", count, "/", selected_cab.capacity)
+
+    for student in selected_cab.passengers:
+        print("  ", student.name, "| Year:", student.year)
+

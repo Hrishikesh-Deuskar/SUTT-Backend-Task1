@@ -300,3 +300,48 @@ def dispatch_cab(cabs):
     for student in selected_cab.passengers:
         print("  ", student.name, "| Year:", student.year)
 
+
+def main():
+    try:
+        cabs = load_cabs()
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print("Could not load cab data:", error)
+        return
+
+    print("Welcome to the Cab Pool Matcher!")
+
+    while True:
+        print("\n========== CAB POOL MATCHER ==========")
+        print("1. Add Ride Request")
+        print("2. View Students and Cabs")
+        print("3. Find Matches")
+        print("4. Dispatch Cab")
+        print("5. Exit")
+
+        choice = input("\nEnter your choice: ")
+
+        if choice == "1":
+            add_request()
+
+        elif choice == "2":
+            view_status(cabs)
+
+        elif choice == "3":
+            find_matches(cabs)
+
+        elif choice == "4":
+            dispatch_cab(cabs)
+
+        elif choice == "5":
+            print("Thank you for using Cab Pool Matcher!")
+            break
+
+        else:
+            print("Invalid choice. Please enter 1-5.")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (KeyboardInterrupt, EOFError):
+        print("\nProgram closed.")
